@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+
+# Training artifacts - never commit intermediate weights or raw data
+models/checkpoints/
+models/tmp/
+logs/*.csv
+logs/tensorboard/
+*.zip
+!models/best_model.zip
+
+# Video is hosted externally, never committed
+videos/
+*.mp4
+*.mov
+
+# OS / editor
+.DS_Store
+.vscode/

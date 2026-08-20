@@ -1,0 +1,7 @@
+flappy-bird-gymnasium
+gymnasium
+stable-baselines3
+torch
+numpy
+matplotlib
+pandas
