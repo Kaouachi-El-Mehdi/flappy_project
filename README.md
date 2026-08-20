@@ -23,22 +23,32 @@ Pourquoi Flappy Bird :
 
 ## Observation, action, récompense
 
-TODO — à remplir après la première exécution de l'agent aléatoire (voir `agents/random_agent.py`)
-et avant tout entraînement :
-- **Observation** : TODO (dimension du vecteur d'état, ce qu'il contient)
-- **Actions** : TODO (0 = ne rien faire, 1 = battre des ailes)
-- **Récompense** : TODO (valeurs exactes données par l'environnement, et si on les modifie)
+Vérifié en inspectant `FlappyBird-v0` directement (`use_lidar=False`), avant tout entraînement :
+
+- **Observation** : vecteur de 12 valeurs continues, normalisées entre -1 et 1
+  (`Box(-1.0, 1.0, (12,), float64)`). Il encode la position/vitesse verticale de l'oiseau et la
+  position des prochains tuyaux (variante simplifiée, sans LIDAR — 180 valeurs en mode LIDAR).
+- **Actions** : `Discrete(2)` — `0` = ne rien faire (l'oiseau tombe), `1` = battre des ailes (saut).
+- **Récompense** (valeurs par défaut de l'environnement, non modifiées pour la première itération) :
+  - `+0.1` par frame en vie
+  - `+1.0` à chaque tuyau passé (incrémente aussi `info["score"]`)
+  - `-0.5` en "zone privée" (trop près du bord d'un tuyau, quasi-collision)
+  - `-1.0` à la mort
 
 ## Score de référence (agent aléatoire)
 
-TODO — remplir après avoir lancé :
 ```
 python agents/random_agent.py --episodes 30
 ```
 
 | | Nombre de parties | Score moyen | Score max |
 |---|---|---|---|
-| Agent aléatoire | 30 | TODO | TODO |
+| Agent aléatoire | 30 | 0.00 | 0 |
+
+Sur 30 parties, l'agent aléatoire ne passe **aucun** tuyau : Flappy Bird ne pardonne pas les actions
+aléatoires (une seule mauvaise décision suffit à mourir), donc `0` est une référence légitime et
+attendue. L'agent entraîné n'a donc besoin que de passer au moins un tuyau de façon répétée pour
+prouver qu'il a appris mieux que le hasard.
 
 ## Méthode d'apprentissage
 
