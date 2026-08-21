@@ -6,10 +6,10 @@ Un agent qui apprend à jouer à Flappy Bird, comparé à un agent aléatoire.
 
 | Rôle | Membre |
 |------|--------|
-| Environnement | TODO |
-| Algo | TODO |
-| Entraînement + suivi | TODO |
-| Restitution | TODO |
+| Environnement | Mostafa |
+| Algo | Saddem |
+| Entraînement + suivi | El Mehdi |
+| Restitution | Anass |
 
 ## Le jeu, et pourquoi celui-ci
 
