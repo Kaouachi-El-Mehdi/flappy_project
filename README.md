@@ -130,6 +130,4 @@ source .venv/Scripts/activate   # ou .venv\Scripts\activate sous Windows
 pip install -r requirements.txt
 ```
 
-## Vidéo de présentation (10-15 min)
 
-TODO — lien (YouTube non répertorié / Loom / autre, accessible sans compte) : TODO
