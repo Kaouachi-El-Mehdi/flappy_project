@@ -1,41 +1,112 @@
 """
-Plots the evaluation score over training timesteps (from EvalCallback logs),
-overlaid with the random-agent baseline score, for one or more training runs
-(seeds). Multiple seeds on one plot make it easy to see whether repeated
-training runs converge to similar curves.
+Plots training progression for the different DQN experiments.
+
+V1:
+    seeds 0, 1, 2, 3, 4
+
+V2:
+    seed 5 with reward shaping and improved hyperparameters.
 
 Usage:
-    python training/plot_progress.py --seeds 0 1 2 --baseline-score 1.3
+    python training/plot_progress.py
 """
-import argparse
+
+import os
 
 import matplotlib.pyplot as plt
 import numpy as np
 
 
-def plot(seeds, baseline_score, out_path):
-    fig, ax = plt.subplots(figsize=(9, 5))
+def load_run(path):
+    """Load Stable-Baselines3 EvalCallback results."""
+    data = np.load(path)
 
-    for seed in seeds:
-        data = np.load(f"logs/eval_seed_{seed}/evaluations.npz")
-        timesteps = data["timesteps"]
-        mean_scores = data["results"].mean(axis=1)
-        ax.plot(timesteps, mean_scores, label=f"seed {seed}")
+    timesteps = data["timesteps"]
+    mean_rewards = data["results"].mean(axis=1)
+    std_rewards = data["results"].std(axis=1)
 
-    ax.axhline(baseline_score, color="gray", linestyle="--", label="random agent baseline")
-    ax.set_xlabel("training timesteps")
-    ax.set_ylabel("mean evaluation score")
-    ax.set_title("DQN training progress vs random baseline (FlappyBird-v0)")
-    ax.legend()
+    return timesteps, mean_rewards, std_rewards
+
+
+def plot():
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    # --------------------------------------------------
+    # V1 experiments
+    # --------------------------------------------------
+
+    v1_runs = {
+        0: "DQN V1 - seed 0 (200k)",
+        1: "DQN V1 - seed 1 (200k)",
+        2: "DQN V1 - seed 2 (200k)",
+        3: "DQN V1 - seed 3 (1M)",
+        4: "DQN V1 - seed 4 (2M)",
+    }
+
+    for seed, label in v1_runs.items():
+        path = f"logs/eval_seed_{seed}/evaluations.npz"
+
+        if not os.path.exists(path):
+            print(f"Skipping missing file: {path}")
+            continue
+
+        timesteps, means, stds = load_run(path)
+
+        ax.plot(
+            timesteps,
+            means,
+            linewidth=1.5,
+            alpha=0.65,
+            label=label,
+        )
+
+    # --------------------------------------------------
+    # V2 - improved agent
+    # --------------------------------------------------
+
+    v2_path = "logs/eval_v2_seed_5/evaluations.npz"
+
+    if os.path.exists(v2_path):
+        timesteps, means, stds = load_run(v2_path)
+
+        ax.plot(
+            timesteps,
+            means,
+            linewidth=3,
+            label="DQN V2 - seed 5 (2M)",
+        )
+
+        ax.fill_between(
+            timesteps,
+            means - stds,
+            means + stds,
+            alpha=0.15,
+        )
+
+    else:
+        print(f"Missing V2 log: {v2_path}")
+
+    # --------------------------------------------------
+    # Graph formatting
+    # --------------------------------------------------
+
+    ax.set_xlabel("Training timesteps")
+    ax.set_ylabel("Mean evaluation reward")
+
+    ax.set_title(
+        "DQN training progression - FlappyBird-v0"
+    )
+
+    ax.grid(True, alpha=0.25)
+    ax.legend(fontsize=8)
+
     fig.tight_layout()
-    fig.savefig(out_path, dpi=150)
-    print(f"saved {out_path}")
+
+    output = "logs/training_curve.png"
+    fig.savefig(output, dpi=180)
+
+    print(f"\nSaved: {output}")
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--seeds", type=int, nargs="+", default=[0])
-    parser.add_argument("--baseline-score", type=float, required=True)
-    parser.add_argument("--out", type=str, default="logs/training_curve.png")
-    args = parser.parse_args()
-    plot(args.seeds, args.baseline_score, args.out)
+    plot()

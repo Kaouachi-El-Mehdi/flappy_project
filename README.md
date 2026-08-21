@@ -82,13 +82,13 @@ TODO — insérer la courbe (`logs/training_curve.png`) une fois générée, et 
 
 TODO — à remplir après reload du meilleur modèle depuis un script neuf :
 ```
-python training/evaluate.py --model models/best_model.zip --episodes 30
+python training/evaluate_v2.py --model models/best_model.zip --episodes 30
 ```
 
-| | Nombre de parties | Score moyen | Score max |
-|---|---|---|---|
-| Agent aléatoire | 30 | TODO | TODO |
-| Agent entraîné (DQN) | 30 | TODO | TODO |
+|    Agent                | Nombre de parties     | Score moyen | Score max |
+
+| Agent aléatoire         | 30                    | 0.00        | 0         |
+| Agent entraîné (DQN)V2  | 30                    | 33.43       | 184       |
 
 ## Reproductibilité
 
@@ -96,13 +96,34 @@ Le même entraînement a été relancé sur plusieurs graines aléatoires (seeds
 variance entre runs. Voir `docs/carnet_essais.md` pour le détail des tentatives, y compris les
 ratées.
 
+
+3. **Replace `## Un échec instructif` with this**
+
+```markdown
 ## Un échec instructif
 
-TODO — décrire une tentative qui n'a pas marché et ce qu'elle nous a appris.
+Le premier DQN entraîné pendant 200 000 timesteps obtenait seulement un score moyen de 0.47 et un maximum de 1.
+
+Nous avons ensuite augmenté l'entraînement à 1 000 000 de timesteps, ce qui a permis d'atteindre un score moyen de 4.03 et un maximum de 11.
+
+Un entraînement encore plus long de 2 000 000 de timesteps n'a cependant pas amélioré les résultats : le score moyen est redescendu à 3.27.
+
+Cela nous a montré qu'augmenter uniquement la durée d'entraînement ne garantit pas une meilleure politique.
+
+Nous avons donc créé une deuxième version du DQN avec une fonction de récompense davantage orientée vers le passage des tuyaux, un réseau plus grand et une exploration plus longue.
+
+Cette version a obtenu un score moyen de 33.43 et un maximum de 181.
 
 ## Avec plus de temps
 
-TODO
+Avec plus de temps, nous pourrions :
+
+- tester davantage de seeds pour mesurer plus précisément la variance ;
+- comparer DQN avec PPO ;
+- effectuer une recherche automatique des hyperparamètres ;
+- tester l'observation LIDAR ;
+- entraîner l'agent sur davantage de timesteps ;
+- améliorer encore la fonction de récompense.
 
 ## Installation
 
