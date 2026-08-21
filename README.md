@@ -70,17 +70,10 @@ sauvegardé automatiquement (`models/checkpoints/seed_<seed>/best_model.zip`), e
 d'évaluation périodiques sont enregistrés dans `logs/eval_seed_<seed>/evaluations.npz` pour tracer
 la courbe de progression.
 
-## Courbe de progression
-
-```
-python training/plot_progress.py --seeds 0 1 2 --baseline-score <score_moyen_aleatoire>
-```
-
-TODO — insérer la courbe (`logs/training_curve.png`) une fois générée, et commenter ce qu'elle montre.
 
 ## Résultat final : aléatoire vs entraîné
 
-TODO — à remplir après reload du meilleur modèle depuis un script neuf :
+
 ```
 python training/evaluate_v2.py --model models/best_model.zip --episodes 30
 ```
@@ -97,10 +90,10 @@ variance entre runs. Voir `docs/carnet_essais.md` pour le détail des tentatives
 ratées.
 
 
-3. **Replace `## Un échec instructif` with this**
+3. ## Un échec instructif
 
 ```markdown
-## Un échec instructif
+
 
 Le premier DQN entraîné pendant 200 000 timesteps obtenait seulement un score moyen de 0.47 et un maximum de 1.
 
@@ -124,6 +117,10 @@ Avec plus de temps, nous pourrions :
 - tester l'observation LIDAR ;
 - entraîner l'agent sur davantage de timesteps ;
 - améliorer encore la fonction de récompense.
+
+### Comparaison finale
+## Courbe de progression
+![Comparaison des performances](logs/final_comparison.png)
 
 ## Installation
 
